@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/tvIntro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:text="Hvor raskt klarer du å flytte ringene fra tårn 1 til tårn 3 ? Velg antall ringer."
+        android:textColor="@color/purple_700"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        tools:ignore="MissingConstraints" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_marginTop="80dp"
+        android:orientation="horizontal"
+        android:background="@drawable/shape" >
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="Antall ringer:"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+        <EditText
+            android:id="@+id/eTDisks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:text="3"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:backgroundTint="#4CAF50"
+            android:onClick="startTimer"
+            android:padding="10dp"
+            android:text="START"></Button>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_marginTop="150dp"
+        android:weightSum="3">
+
+        <LinearLayout
+            android:id="@+id/left"
+            android:layout_width="18dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/shape"
+            android:gravity="bottom|center_horizontal"
+            android:orientation="vertical"
+            android:weightSum="3">
+            <ImageView
+                android:id="@+id/peg1"
+                android:layout_width="210dp"
+                android:layout_height="300dp"
+                android:layout_marginTop="-550dp"
+                android:scaleType="fitXY"
+                android:rotationX="180"
+                android:src="@drawable/ic_baseline_peg">
+            </ImageView>
+
+            <TextView
+                android:id="@+id/tvMoves"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-30dp"
+                android:text="Antall flytt: ?"
+                android:textColor="@color/black"
+                android:textSize="18dp"
+                android:textStyle="bold">
+            </TextView>
+            <ImageView
+                android:id="@+id/disk1"
+                android:layout_width="110dp"
+                android:layout_height="80dp"
+                android:layout_marginTop="-130dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/disk1">
+            </ImageView>
+            <ImageView
+                android:id="@+id/disk2"
+                android:layout_width="90dp"
+                android:layout_height="80dp"
+                android:layout_marginTop="-108dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/disk2">
+            </ImageView>
+            <ImageView
+                android:id="@+id/disk3"
+                android:layout_width="70dp"
+                android:layout_height="80dp"
+                android:layout_marginTop="-107dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/disk3">
+            </ImageView>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/middle"
+            android:layout_width="18dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/shape"
+            android:gravity="bottom|center_horizontal"
+            android:orientation="vertical"
+            android:weightSum="3">
+            <ImageView
+                android:id="@+id/peg2"
+                android:layout_width="210dp"
+                android:layout_height="300dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginTop="-550dp"
+                android:scaleType="fitXY"
+                android:rotationX="180"
+                android:src="@drawable/ic_baseline_peg">
+            </ImageView>
+
+            <TextView
+                android:id="@+id/tvElapsedTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-30dp"
+                android:text="Sekunder:"
+                android:textColor="@color/black"
+                android:textSize="18dp"
+                android:textStyle="bold">
+
+            </TextView>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/right"
+            android:layout_width="18dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/shape"
+            android:gravity="bottom|center_horizontal"
+            android:orientation="vertical"
+            android:weightSum="3">
+            <ImageView
+                android:id="@+id/peg3"
+                android:layout_width="210dp"
+                android:layout_height="300dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginTop="-550dp"
+                android:scaleType="fitXY"
+                android:rotationX="180"
+                android:src="@drawable/ic_baseline_peg">
+            </ImageView>
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
