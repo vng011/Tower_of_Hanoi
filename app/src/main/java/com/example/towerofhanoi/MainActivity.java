@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.math.BigDecimal;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -29,7 +30,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvElapsedTime;
     private TextView tvMoves;
 
-    private int moves = 0;                             //The number of moves
+    private int totalMoves, minPossibleMoves;
+    //private int moves = 0;                             //The number of moves
     private static final int NUM_DISKS = 3;            //The number of disks for a certain game
 
     @Override
@@ -63,15 +65,18 @@ public class MainActivity extends AppCompatActivity {
         //Textview to show seconds
         tvElapsedTime = findViewById(R.id.tvElapsedTime);
 
+        // Possible min moves (2^n - 1); n number of disks
+        minPossibleMoves = (int) (Math.pow(2, NUM_DISKS) - 1);
     }
 
     //***Check
     private class MyTouchListener implements View.OnTouchListener {
         public boolean onTouch(View viewToBeDragged, MotionEvent motionEvent) {
-            LinearLayout owner = (LinearLayout) viewToBeDragged.getParent();//Đề bài
-            View top = owner.getChildAt(0);//Đề bài
+            LinearLayout owner = (LinearLayout) viewToBeDragged.getParent();
+            View top = owner.getChildAt(0);
 
-            if (viewToBeDragged == top || owner.getChildCount() == 1) { //Đề bài
+            if (viewToBeDragged == top || owner.getChildCount() == 1) {
+                if(motionEvent.getAction() == motionEvent.ACTION_DOWN) {
                     //Data som kan sendes med til drag-receiver
                     ClipData data = ClipData.newPlainText("", "");
 
@@ -84,10 +89,12 @@ public class MainActivity extends AppCompatActivity {
                     //Gjør bildet som dragges usynlig
                     top.setVisibility(View.INVISIBLE);
                     return true;
+                }
 
-            }  else {
+            } /* else {
                 return false;
-            }
+            }*/
+            return false;
         /*    //starter Drag operation
             if(motionEvent.getAction() == motionEvent.ACTION_DOWN){
                 //Data som kan sendes med til drag-receiver
@@ -216,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Check if the puzzle has been completed.
-    public void complete(){
+    /*public void complete(){
         if (moves == Math.pow(2, NUM_DISKS) - 1){
             Toast.makeText(this, "You win. The game will stop automatically", Toast.LENGTH_SHORT).show();
             stopTime(tvElapsedTime);
@@ -224,16 +231,26 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "You lose. Play again.", Toast.LENGTH_SHORT).show();
             stopTime(tvElapsedTime);
         }
-    }
+    }*/
+
 
     //Update the move counter with the current number of moves.
     public void updateText(int moves) {
         tvMoves.setText("Antall flytt: " + moves);
     }
 
-    //Return to the main menu by finishing this Activity.
-    public void mainMenu(View v) {
-        super.finish();
+    public void gameOver(int moves) {
+        totalMoves = moves;
+        showDialog();
     }
 
+    public void showDialog() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Game Over");
+
+        if (totalMoves < minPossibleMoves)
+            alert.setMessage("You won, congrats!!!!");
+
+        alert.create().show();
+    }
 }
