@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="3">
+
+    <LinearLayout
+        android:id="@+id/left"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:background="@drawable/shape"
+        android:gravity="bottom|center_horizontal">
+        <TextView
+            android:id="@+id/tvDisks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_marginBottom ="400dp"
+            android:text="Antall ringer: 3"
+            android:textColor="@color/black"
+            android:textSize="15dp"
+            android:textStyle="bold">
+        </TextView>
+
+        <LinearLayout
+            android:layout_width="130dp"
+            android:layout_height="15dp"
+            android:layout_marginTop ="-200dp"
+            android:orientation="vertical"
+            android:background="#66C66A"/>
+        <LinearLayout
+            android:layout_width="15dp"
+            android:layout_height="180dp"
+            android:layout_marginTop = "-190dp"
+            android:background="#66C66A"/>
+        <ImageView
+            android:id="@+id/small_ring"
+            android:layout_width="60dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="-112dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/disk1" />
+        <ImageView
+            android:id="@+id/middle_ring"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="-52dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/disk2" />
+        <ImageView
+            android:id="@+id/large_ring"
+            android:layout_width="100dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="-55dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/disk3">
+        </ImageView>
+        <TextView
+            android:id="@+id/tvMoves"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:text="Antall flytt: ?"
+            android:textColor="@color/black"
+            android:textSize="15dp"
+            android:textStyle="bold">
+        </TextView>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/middle"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:background="@drawable/shape"
+        android:gravity="bottom|center_horizontal">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom ="430dp"
+            android:backgroundTint="#4CAF50"
+            android:onClick="startTimer"
+            android:padding="10dp"
+            android:text="START"/>
+        <LinearLayout
+            android:layout_width="130dp"
+            android:layout_height="15dp"
+            android:layout_marginTop ="-232dp"
+            android:orientation="vertical"
+            android:background="#66C66A"/>
+        <LinearLayout
+            android:layout_width="15dp"
+            android:layout_height="180dp"
+            android:layout_marginTop = "-190dp"
+            android:background="#66C66A"/>
+        <TextView
+            android:id="@+id/tvElapsedTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="47dp"
+            android:text="Sekunder:"
+            android:textColor="@color/black"
+            android:textSize="15dp"
+            android:textStyle="bold">
+        </TextView>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/right"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:background="@drawable/shape"
+        android:gravity="bottom|center_horizontal">
+        <LinearLayout
+            android:layout_width="130dp"
+            android:layout_height="15dp"
+            android:layout_marginTop ="-300dp"
+            android:orientation="vertical"
+            android:background="#66C66A"/>
+        <LinearLayout
+            android:layout_width="15dp"
+            android:layout_height="180dp"
+            android:layout_marginTop = "-190dp"
+            android:background="#66C66A"/>
+    </LinearLayout>
+</LinearLayout>

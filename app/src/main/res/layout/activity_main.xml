@@ -1,49 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        tools:ignore="MissingConstraints">
+    </androidx.appcompat.widget.Toolbar>
+
     <TextView
         android:id="@+id/tvIntro"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:padding="10dp"
-        android:text="Hvor raskt klarer du å flytte ringene fra tårn 1 til tårn 3 ? Velg antall ringer."
+        android:text="Hvor raskt klarer du å flytte ringene fra tårn 1 til tårn 3? Velg antall ringer."
         android:textColor="@color/purple_700"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        tools:ignore="MissingConstraints" />
+        android:textSize="15dp"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:layout_marginTop="80dp"
-        android:orientation="horizontal"
-        android:background="@drawable/shape" >
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/tvDisks"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:text="Antall ringer:"
             android:textColor="@color/black"
-            android:textSize="20dp"
+            android:textSize="15dp"
             android:textStyle="bold" />
-        <EditText
+
+        <TextView
             android:id="@+id/eTDisks"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
             android:text="3"
-            android:textStyle="bold" />
-
+            android:textColor="@color/black"
+            android:textSize="15dp"
+            android:textStyle="bold"  />
         <Button
             android:id="@+id/btnStart"
             android:layout_width="wrap_content"
@@ -52,31 +56,58 @@
             android:backgroundTint="#4CAF50"
             android:onClick="startTimer"
             android:padding="10dp"
-            android:text="START"></Button>
+            android:text="START">
+        </Button>
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:layout_marginTop="150dp"
         android:weightSum="3">
 
         <LinearLayout
             android:id="@+id/left"
-            android:layout_width="18dp"
+            android:layout_width="135dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/shape"
-            android:gravity="bottom|center_horizontal"
             android:orientation="vertical"
-            android:weightSum="3">
+            android:background="@drawable/shape"
+            android:gravity="bottom|center_horizontal">
+            <LinearLayout
+                android:layout_width="130dp"
+                android:layout_height="15dp"
+                android:layout_marginTop = "-150dp"
+                android:orientation="vertical"
+                android:background="#66C66A"/>
+            <LinearLayout
+                android:layout_width="15dp"
+                android:layout_height="180dp"
+                android:layout_marginTop = "-190dp"
+                android:background="#66C66A"/>
+
             <ImageView
-                android:id="@+id/peg1"
-                android:layout_width="170dp"
-                android:layout_height="230dp"
-                android:layout_marginTop="-450dp"
+                android:id="@+id/small_ring"
+                android:layout_width="60dp"
+                android:layout_height="80dp"
+                android:layout_marginTop="-112dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/pole">
+                android:src="@drawable/disk1" />
+            <ImageView
+                android:id="@+id/middle_ring"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginTop="-52dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/disk2" />
+
+            <ImageView
+                android:id="@+id/large_ring"
+                android:layout_width="100dp"
+                android:layout_height="80dp"
+                android:layout_marginTop="-55dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/disk3">
             </ImageView>
 
             <TextView
@@ -86,85 +117,57 @@
                 android:layout_marginTop="25dp"
                 android:text="Antall flytt: ?"
                 android:textColor="@color/black"
-                android:textSize="18dp"
+                android:textSize="15dp"
                 android:textStyle="bold">
             </TextView>
-            <ImageView
-                android:id="@+id/disk1"
-                android:layout_width="110dp"
-                android:layout_height="90dp"
-                android:layout_marginTop="-155dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/disk1">
-            </ImageView>
-            <ImageView
-                android:id="@+id/disk2"
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-                android:layout_marginTop="-122dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/disk2">
-            </ImageView>
-            <ImageView
-                android:id="@+id/disk3"
-                android:layout_width="70dp"
-                android:layout_height="90dp"
-                android:layout_marginTop="-122dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/disk3">
-            </ImageView>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/middle"
-            android:layout_width="18dp"
+            android:layout_width="135dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/shape"
-            android:gravity="bottom|center_horizontal"
             android:orientation="vertical"
-            android:weightSum="3">
-            <ImageView
-                android:id="@+id/peg2"
-                android:layout_width="170dp"
-                android:layout_height="230dp"
-                android:layout_marginLeft="1dp"
-                android:layout_marginTop="-450dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/pole">
-            </ImageView>
-
+            android:background="@drawable/shape"
+            android:gravity="bottom|center_horizontal">
+            <LinearLayout
+                android:layout_width="130dp"
+                android:layout_height="15dp"
+                android:orientation="vertical"
+                android:layout_marginTop="-182dp"
+                android:background="#66C66A"/>
+            <LinearLayout
+                android:layout_width="15dp"
+                android:layout_height="180dp"
+                android:layout_marginTop="-190dp"
+                android:background="#66C66A"/>
             <TextView
                 android:id="@+id/tvElapsedTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="47dp"
                 android:text="Sekunder:"
                 android:textColor="@color/black"
-                android:textSize="18dp"
+                android:textSize="15dp"
                 android:textStyle="bold">
-
             </TextView>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/right"
-            android:layout_width="18dp"
+            android:layout_width="135dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/shape"
-            android:gravity="bottom|center_horizontal"
             android:orientation="vertical"
-            android:weightSum="3">
-            <ImageView
-                android:id="@+id/peg3"
-                android:layout_width="170dp"
-                android:layout_height="230dp"
-                android:layout_marginLeft="1dp"
-                android:layout_marginTop="-500dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/pole">
-            </ImageView>
+            android:background="@drawable/shape"
+            android:gravity="bottom|center_horizontal">
+            <LinearLayout
+                android:layout_width="130dp"
+                android:layout_height="15dp"
+                android:orientation="vertical"
+                android:layout_marginTop="-249dp"
+                android:background="#66C66A"/>
+            <LinearLayout
+                android:layout_width="15dp"
+                android:layout_height="180dp"
+                android:layout_marginTop="-190dp"
+                android:background="#66C66A"/>
         </LinearLayout>
     </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
-
+</LinearLayout>
