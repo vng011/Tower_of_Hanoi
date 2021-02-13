@@ -1,100 +1,102 @@
 package com.example.towerofhanoi;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.math.BigDecimal;
 import java.util.Timer;
 import java.util.TimerTask;
 
 @SuppressLint("ClickableViewAccessibility")  //For å unngå warning om at performClick må håndteres for ImageView
 public class MainActivity extends AppCompatActivity {
 
-    private int moves = 0;                             //The number of moves
-    private TextView tvMoves;
-
     private Timer timer;
     private TimerTask timerTask;
     private long time = 0;
     boolean timerStarted = false;
     private TextView tvElapsedTime;
-    private Button startButton;
-    private boolean running;
+    private TextView tvMoves;
 
-    private LinearLayout left;
-    private LinearLayout middle;
-    private LinearLayout right;
-
-    private ImageView small_ring;
-    private ImageView middle_ring;
-    private ImageView large_ring;
-
-    private androidx.appcompat.widget.Toolbar toolbar;
+    private int totalMoves, minPossibleMoves;
+    //private int moves = 0;                             //The number of moves
+    private static final int NUM_DISKS = 3;            //The number of disks for a certain game
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        toolbar = findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
-
         //setter onTouchListener on 3 disks(Image).Brukes til å starte "drag and drop"
-        large_ring = findViewById(R.id.large_ring);
-        large_ring.setOnTouchListener(new MyTouchListener());
+        ImageView disk1 = findViewById(R.id.disk1);
+        disk1.setOnTouchListener(new MyTouchListener());
 
-        middle_ring = findViewById(R.id.middle_ring);
-        middle_ring.setOnTouchListener(new MyTouchListener());
+        ImageView disk2 = findViewById(R.id.disk2);
+        disk2.setOnTouchListener(new MyTouchListener());
 
-        small_ring = findViewById(R.id.small_ring);
-        small_ring.setOnTouchListener(new MyTouchListener());
+        ImageView disk3 = findViewById(R.id.disk3);
+        disk3.setOnTouchListener(new MyTouchListener());
 
         //Setter onDragListenerpå alle typer av Linear Layout(3 konteiner)
-        left = findViewById(R.id.left);
+        LinearLayout left = findViewById(R.id.left);
         left.setOnDragListener(new MyDragListener());
 
-        middle = findViewById(R.id.middle);
+        LinearLayout middle = findViewById(R.id.middle);
         middle.setOnDragListener(new MyDragListener());
 
-        right = findViewById(R.id.right);
+        LinearLayout right = findViewById(R.id.right);
         right.setOnDragListener(new MyDragListener());
 
-        //Textview to show number of moves
+        // Textview to show number of moves
         tvMoves = findViewById(R.id.tvMoves);
 
         //Textview to show seconds
         tvElapsedTime = findViewById(R.id.tvElapsedTime);
 
-        startButton = findViewById(R.id.btnStart);
-        Toast.makeText(this, "Trykk på start for å spille", Toast.LENGTH_SHORT).show();
-        movesCount();
-        running = false;
-
+        // Possible min moves (2^n - 1); n number of disks
+        minPossibleMoves = (int) (Math.pow(2, NUM_DISKS) - 1);
     }
 
-    //Check if the ring is on the top, otherwise it cannot be moved
+    //***Check
     private class MyTouchListener implements View.OnTouchListener {
         public boolean onTouch(View viewToBeDragged, MotionEvent motionEvent) {
-           LinearLayout owner = (LinearLayout) viewToBeDragged.getParent();
-           View top =  owner.getChildAt(0);
+            LinearLayout owner = (LinearLayout) viewToBeDragged.getParent();
+            View top = owner.getChildAt(0);
 
-           if (running && viewToBeDragged == top || owner.getChildCount() == 1) {
-            //if(motionEvent.getAction() == motionEvent.ACTION_DOWN) {
+            if (viewToBeDragged == top || owner.getChildCount() == 1) {
+                if(motionEvent.getAction() == motionEvent.ACTION_DOWN) {
+                    //Data som kan sendes med til drag-receiver
+                    ClipData data = ClipData.newPlainText("", "");
+
+                    //lager en drag-skygge av viewet som skal dras
+                    View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(top);
+
+                    //started Drag and Drop, alle View som implementerer OnDragListener vil motta onDrag-events
+                    top.startDrag(data, shadowBuilder, viewToBeDragged, 0);
+
+                    //Gjør bildet som dragges usynlig
+                    top.setVisibility(View.INVISIBLE);
+                    return true;
+                }
+
+            } /* else {
+                return false;
+            }*/
+            return false;
+        /*    //starter Drag operation
+            if(motionEvent.getAction() == motionEvent.ACTION_DOWN){
                 //Data som kan sendes med til drag-receiver
                 ClipData data = ClipData.newPlainText("", "");
 
@@ -107,82 +109,67 @@ public class MainActivity extends AppCompatActivity {
                 //Gjør bildet som dragges usynlig
                 viewToBeDragged.setVisibility(View.INVISIBLE);
                 return true;
-            } else {
+            }else {
                 return false;
-            }
+            }*/
         }
     }
 
-
     //****Check
     private class MyDragListener implements View.OnDragListener {
-        Drawable enterShape = getResources().getDrawable(R.drawable.shape_droptarget);
-        Drawable normalShape = getResources().getDrawable(R.drawable.shape);
-
         @Override
         public boolean onDrag(View view, DragEvent event) {
             int action = event.getAction();
-            //View draggedView = (View) event.getLocalState();
+            boolean dragInterrupted = false;
 
-            switch (action) {
+            //Konteiner som dragged View dras til((som er en av de tre LinearLayout-ene):
+            LinearLayout receiveContainer = (LinearLayout) view;
+
+            switch(action){
                 case DragEvent.ACTION_DRAG_STARTED:
                     // Skjer ingenting, skal ikke kunne dra rektanglene.
                     break;
                 case DragEvent.ACTION_DRAG_ENTERED:
                     // Skjer ingenting, skal ikke kunne dra rektanglene.
-                    view.setBackgroundDrawable(enterShape);
                     break;
-
-                case DragEvent.ACTION_DRAG_EXITED:
-                    view.setBackgroundDrawable(normalShape);
-                    break;
-
                 case DragEvent.ACTION_DROP:
+                    View topElement = null;                           //Đề bài
+                    LinearLayout container = (LinearLayout) view;     //Đề bài
+                    if (container.getChildCount() > 0)                //Đề bài
+                        topElement = container.getChildAt(0);   //Đề bài
 
-                    //Bildet som blir dradd:.
+                    //Bildet som blir dragg
                     View draggedView = (View) event.getLocalState();
-                    View topElement = null;
 
-                    //Reassign View to ViewGroup
-                    ViewGroup owner = (ViewGroup) draggedView.getParent();
-                    owner.removeView(draggedView);
-                    LinearLayout container = (LinearLayout) view;
+                    // Settes denne til true avbrytes drag - her kan man altså sette en betingelse for avbrutt operasjon eller ikke!
+                    String draggedViewTag = draggedView.getTag().toString();
+                    String draggedToContainerTag = receiveContainer.getTag().toString();
+                    //dragInterrupted = draggedViewTag.equals(?) && draggedToContainerTag.equals(?);
 
-                    if (container.getChildCount() > 0) {
-                        topElement = container.getChildAt(0);
-                        if(topElement.getWidth() > draggedView.getWidth()){
-                            container.addView(draggedView, 0); //set view at top
-                            draggedView.setVisibility(View.VISIBLE);
-                            moves++;
-                        }else{
-                            owner.addView(draggedView, 0);
-                            draggedView.setVisibility(View.VISIBLE);
-                        }
-                    } else { //(hvis det er ingen ringer i container)
-                        container.addView(draggedView);
-                        draggedView.setVisibility(View.VISIBLE);
-                        moves++;
+                    if (dragInterrupted) {
+                        return false;
+                    } else {
+                        // owner er her foreldreview (en av de fire LinearLayout-objektene) til bildet som blir dradd,
+                        // fjerner bildet fra ownerview:
+                        ViewGroup owner = (ViewGroup) draggedView.getParent();
+                        owner.removeView(draggedView);
+                        // Legger draggedView til motakkskonteiner:
+                        receiveContainer.addView(draggedView);
                     }
-
-                    if(right.getChildCount() == 3){
-                        stopTime(tvElapsedTime);
-                        small_ring.setOnTouchListener(null);
-                        Toast.makeText(MainActivity.this, "Du har vunnet. Klokke blir nullstilt", Toast.LENGTH_SHORT).show();
-                        resetGame();
-                    }
-                    movesCount();
+                    draggedView.setVisibility(View.VISIBLE);
                     break;
 
-                 //DENNE GJØR AT MAN FÅR EN "TILBAKEANIMASJON"
-                 case DragEvent.ACTION_DRAG_ENDED:
-                     view.setBackgroundDrawable(normalShape);   //Sett view synlig igjen.
-                     break;
+                //DENNE GJØR AT MAN FÅR EN "TILBAKEANIMASJON"
+              /*  case DragEvent.ACTION_DRAG_ENDED:
+                    draggedView.setVisibility(View.VISIBLE);    //Sett view synlig igjen.
+                    break;*/
 
-                 default:
+                default:
                     break;
             }
             return true;
         }
+
     }
     public void startTimer(View view) {
         timer = new Timer();
@@ -192,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable(){
                     @Override
                     public void run() {
-                       time++;
+                        time++;
 
                         //vise klokke i skjermen
                         tvElapsedTime.setText("Sekunder: " + String.valueOf(time));
@@ -223,57 +210,47 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
+        /*resetAlert.setNeutralButton("Cancel", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i)
+            {
+                //do nothing
+            }
+        });
         resetAlert.show();
+        */
     }
 
-    public void startStopTapped(View view)
-    {
-        if(timerStarted == false)
-        {
-            timerStarted = true;
-            startTimer(tvElapsedTime);
-        }
-        else
-        {
-            timerStarted = false;
-            timerTask.cancel(); //Terminate the timer thread
-        }
-    }
-
-    public void startGame(View v){
-        if(!running){
-            startStopTapped(tvElapsedTime);
-            running = true;
-            startButton.setText("Reset");
+    //Check if the puzzle has been completed.
+    /*public void complete(){
+        if (moves == Math.pow(2, NUM_DISKS) - 1){
+            Toast.makeText(this, "You win. The game will stop automatically", Toast.LENGTH_SHORT).show();
+            stopTime(tvElapsedTime);
         } else{
-            resetGame();
+            Toast.makeText(this, "You lose. Play again.", Toast.LENGTH_SHORT).show();
+            stopTime(tvElapsedTime);
         }
-    }
+    }*/
 
-    private void resetGame() {
-        stopTime(tvElapsedTime);
-        startButton.setText("Start");
-        moves = 0;
-        running = false;
-        movesCount();
-        small_ring.setOnTouchListener(null);
-        resetRings();
-    }
 
-    private void resetRings() {
-        left.removeAllViews();
-        middle.removeAllViews();
-        right.removeAllViews();
-        left.addView(small_ring, 0);
-        left.addView(middle_ring, 1);
-        left.addView(large_ring, 2);
-    }
-
-    private void movesCount() {
+    //Update the move counter with the current number of moves.
+    public void updateText(int moves) {
         tvMoves.setText("Antall flytt: " + moves);
     }
+
+    public void gameOver(int moves) {
+        totalMoves = moves;
+        showDialog();
+    }
+
+    public void showDialog() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Game Over");
+
+        if (totalMoves < minPossibleMoves)
+            alert.setMessage("You won, congrats!!!!");
+
+        alert.create().show();
+    }
 }
-
-
-
